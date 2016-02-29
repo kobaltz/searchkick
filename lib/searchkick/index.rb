@@ -191,7 +191,7 @@ module Searchkick
       # use scope for import
       scope = scope.search_import if scope.respond_to?(:search_import)
       if scope.respond_to?(:find_in_batches)
-        scope.find_in_batches batch_size: batch_size do |batch|
+        scope.replacement_find_in_batches batch_size: batch_size do |batch|
           import batch.select(&:should_index?)
         end
       else
