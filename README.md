@@ -21,8 +21,6 @@ Plus:
 - “Did you mean” suggestions
 - works with ActiveRecord, Mongoid, and NoBrainer
 
-**Searchkick 1.0 was just released!** See [instructions for upgrading](#100)
-
 :speech_balloon: Get [handcrafted updates](http://chartkick.us7.list-manage.com/subscribe?u=952c861f99eb43084e0a49f98&id=6ea6541e8e&group[0][4]=true) for new features
 
 :tangerine: Battle-tested at [Instacart](https://www.instacart.com/opensource)
@@ -247,7 +245,7 @@ Available options are:
 User.search params[:q], fields: [{email: :exact}, :name]
 ```
 
-### Phrase Matches [master]
+### Phrase Matches
 
 ```ruby
 User.search "fresh honey", match: :phrase
@@ -335,7 +333,7 @@ gem 'gemoji-parser'
 And use:
 
 ```ruby
-Product.search "[emoji go here]", emoji: true
+Product.search "🍨🍰", emoji: true
 ```
 
 ### Indexing
@@ -517,7 +515,7 @@ Product.search "milk", boost_where: {orderer_ids: current_user.id}
 
 Autocomplete predicts what a user will type, making the search experience faster and easier.
 
-![Autocomplete](http://ankane.github.io/searchkick/autocomplete.png)
+![Autocomplete](https://raw.githubusercontent.com/ankane/searchkick/gh-pages/autocomplete.png)
 
 **Note:** If you only have a few thousand records, don’t use Searchkick for autocomplete. It’s *much* faster to load all records into JavaScript and autocomplete there (eliminates network requests).
 
@@ -572,7 +570,7 @@ Then add the search box and JavaScript code to a view.
 
 ### Suggestions
 
-![Suggest](http://ankane.github.io/searchkick/recursion.png)
+![Suggest](https://raw.githubusercontent.com/ankane/searchkick/gh-pages/recursion.png)
 
 ```ruby
 class Product < ActiveRecord::Base
@@ -591,7 +589,7 @@ products.suggestions # ["peanut butter"]
 
 [Aggregations](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-facets.html) provide aggregated search data.
 
-![Aggregations](http://ankane.github.io/searchkick/facets.png)
+![Aggregations](https://raw.githubusercontent.com/ankane/searchkick/gh-pages/facets.png)
 
 ```ruby
 products = Product.search "chuck taylor", aggs: [:product_type, :gender, :brand]
@@ -639,7 +637,7 @@ price_ranges = [{to: 20}, {from: 20, to: 50}, {from: 50}]
 Product.search "*", aggs: {price: {ranges: price_ranges}}
 ```
 
-Minimum document count [master]
+Minimum document count
 
 ```ruby
 Product.search "apples", aggs: {store_id: {min_doc_count: 2}}
@@ -931,20 +929,20 @@ Searchkick uses `ENV["ELASTICSEARCH_URL"]` for the Elasticsearch server.  This d
 
 ### Heroku
 
-Choose an add-on: [SearchBox](https://elements.heroku.com/addons/searchbox), [Bonsai](https://elements.heroku.com/addons/bonsai), or [Found](https://elements.heroku.com/addons/foundelasticsearch).
+Choose an add-on: [SearchBox](https://elements.heroku.com/addons/searchbox), [Bonsai](https://elements.heroku.com/addons/bonsai), or [Elastic Cloud](https://elements.heroku.com/addons/foundelasticsearch).
 
 ```sh
 # SearchBox
-heroku addons:add searchbox:starter
-heroku config:add ELASTICSEARCH_URL=`heroku config:get SEARCHBOX_URL`
+heroku addons:create searchbox:starter
+heroku config:set ELASTICSEARCH_URL=`heroku config:get SEARCHBOX_URL`
 
 # Bonsai
-heroku addons:add bonsai
-heroku config:add ELASTICSEARCH_URL=`heroku config:get BONSAI_URL`
+heroku addons:create bonsai
+heroku config:set ELASTICSEARCH_URL=`heroku config:get BONSAI_URL`
 
 # Found
-heroku addons:add foundelasticsearch
-heroku config:add ELASTICSEARCH_URL=`heroku config:get FOUNDELASTICSEARCH_URL`
+heroku addons:create foundelasticsearch
+heroku config:set ELASTICSEARCH_URL=`heroku config:get FOUNDELASTICSEARCH_URL`
 ```
 
 Then deploy and reindex:
@@ -1327,6 +1325,10 @@ product = FactoryGirl.create(:product)
 product.reindex # don't forget this
 Product.searchkick_index.refresh # or this
 ```
+
+## Multi-Tenancy
+
+Check out [this great post](https://www.tiagoamaro.com.br/2014/12/11/multi-tenancy-with-searchkick/) on the [Apartment](https://github.com/influitive/apartment) gem. Follow a similar pattern if you use another gem.
 
 ## Migrating from Tire
 
